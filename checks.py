@@ -102,7 +102,10 @@ def check_dmarc(domain, dmarc_record):
         'records': [{'domain': '_dmarc.%s' % domain, 'type': 'TXT', 'value': dmarc_record}],
         'messages': ['This test is kinda crappy and may yield false negatives.']
     }
-    actual_records = DNS.dnslookup('_dmarc.%s' % domain, 'TXT')
+    try:
+        actual_records = DNS.dnslookup('_dmarc.%s' % domain, 'TXT')
+    except DNS.Base.ServerError:
+        actual_records = []
     for record in actual_records:
         current_record = record[0].decode()
         if current_record == dmarc_record and results['passed'] is not False:
