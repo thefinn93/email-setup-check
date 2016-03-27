@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+"""Check the mail configuration for a particular domain."""
 from flask import Flask, jsonify, render_template
 import checks
 app = Flask(__name__)
+
+app.config['APPLICATION_ROOT'] = '/'
 
 app.config['MX'] = ['mail.seattlemesh.net']
 app.config['SPF'] = ['91.121.161.13', 'q.meshwith.me'], ['2001:41d0:1:e20d::1', 'q.meshwith.me']
@@ -36,5 +39,13 @@ def check(domain, check):
     else:
         return jsonify({"error": "unknown test"})
 
-if __name__ == "__main__":
-    app.run()
+if __name__ == '__main__':
+    # Relevant documents:
+    # http://werkzeug.pocoo.org/docs/middlewares/
+    # http://flask.pocoo.org/docs/patterns/appdispatch/
+    from werkzeug.serving import run_simple
+    from werkzeug.wsgi import DispatcherMiddleware
+    application = DispatcherMiddleware(Flask('check_email_setup'), {
+        app.config['APPLICATION_ROOT']: app,
+    })
+    run_simple('localhost', 5000, application, use_reloader=True)
