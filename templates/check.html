@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>You're bad at DNS</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/dist/css/bootstrap.min.css') }}" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      {% for check in checks %}
+      <div class="check" data-check="{{ check }}">
+        <span class="label label-default label-{{ check }}">Loading</span> <b class="{{ check }}-header header">{{ check }}</b>
+        <div>
+          <div class="card card-block result-{{ check }}">Results for the {{ check }} check are not in yet!</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- jQuery first, then Bootstrap JS. -->
+    <script src="{{ url_for('static', filename='vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/dist/js/bootstrap.min.js') }}" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7"></script>
+    <script type="text/javascript">
+    $(".check").each(function() {
+      console.log(this);
+      console.log($(this).data('check'));
+      $.get("/check/{{ domain }}/" + $(this).data('check'), function(result) {
+        console.log(result);
+        $(".label-" + result.test).removeClass('label-default').addClass(result.passed ? 'label-success' : 'label-danger').text(result.passed ? 'Passed' : 'Failed');
+        var ul = $("<ul>");
+        result.messages.forEach(function(msg) {
+          ul.append($("<li>").text(msg));
+        });
+        $(".result-" + result.test).empty().append(ul);
+      });
+    })
+    </script>
+  </body>
+</html>

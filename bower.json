@@ -1,0 +1,23 @@
+{
+  "name": "email-setup-check",
+  "authors": [
+    "Finn <finn@finn.io>"
+  ],
+  "description": "A simple tool to test the DNS of a given domain",
+  "main": "",
+  "moduleType": [],
+  "license": "GPLv3",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "static/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "4.0"
+  }
+}
