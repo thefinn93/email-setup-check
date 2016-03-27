@@ -3,11 +3,12 @@ from flask import Flask, jsonify, render_template
 import checks
 app = Flask(__name__)
 
-# These all need to get moved to a proper config file
-MX = ['mail.seattlemesh.net']
-SPF = ['91.121.161.13', 'q.meshwith.me'], ['2001:41d0:1:e20d::1', 'q.meshwith.me']
-SELECTOR = 'q'
-DKIM_FOLDER = 'dkim'
+app.config['MX'] = ['mail.seattlemesh.net']
+app.config['SPF'] = ['91.121.161.13', 'q.meshwith.me'], ['2001:41d0:1:e20d::1', 'q.meshwith.me']
+app.config['SELECTOR'] = 'q'
+app.config['DKIM_FOLDER'] = 'dkim'
+app.config.from_pyfile('config.py')
+
 CHECKS = ['mx', 'dkim', 'spf']
 
 
@@ -27,11 +28,11 @@ def rendercheck(domain):
 def check(domain, check):
     """Check the specified test for a given domain, returns the result as JSON."""
     if check == "mx":
-        return jsonify(checks.check_mx(domain, MX))
+        return jsonify(checks.check_mx(domain, app.config['MX']))
     elif check == "spf":
-        return jsonify(checks.check_spf(domain, SPF))
+        return jsonify(checks.check_spf(domain, app.config['SPF']))
     elif check == "dkim":
-        return jsonify(checks.check_dkim(domain, SELECTOR, DKIM_FOLDER))
+        return jsonify(checks.check_dkim(domain, app.config['SELECTOR'], app.config['DKIM_FOLDER']))
     else:
         return jsonify({"error": "unknown test"})
 

@@ -58,3 +58,4 @@ docs/_build/
 target/
 
 static/vendor
+config.py

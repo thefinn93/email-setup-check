@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <style type="text/css">
-    .code  {font-family: monospace}
+    .code  {font-family: monospace;}
+    .card  {overflow-y: auto;}
     </style>
     <title>You're bad at DNS</title>
 
@@ -45,7 +46,6 @@
             .append($("<th>").text("value"))
           );
           result.records.forEach(function(record) {
-            console.log(record);
             table.addClass('table').append($("<tr>")
               .append($("<td>").text(record.domain).addClass('code'))
               .append($("<td>").text(record.type).addClass('code'))
@@ -53,7 +53,7 @@
             );
           });
         }
-        $(".result-" + result.test).empty().append(ul).append(table);
+        $(".result-" + result.test).empty().append(ul).append($("<b>Correct Records</b>")).append(table);
       });
     })
     </script>

@@ -63,6 +63,8 @@ def check_dkim(domain, selector, folder):
                 results['messages'].append('Correct DKIM record found at %s' % txt_domain)
         else:
             results['messages'].append("%s found instead" % current_record)
+    if len(actual_records) == 0:
+        results['messages'].append('No DKIM records found (for selector %s)' % selector)
     return results
 
 
@@ -88,4 +90,6 @@ def check_mx(domain, servers):
         else:
             results['passed'] = False
             results['messages'].append('Incorrect MX record %s found' % record)
+    if len(actual_records) == 0:
+        results['messages'].append('No MX records found!')
     return results
