@@ -16,7 +16,7 @@ CHECKS = ['mx', 'dkim', 'spf']
 @app.route("/")
 def hello():
     """Don't do anything."""
-    return "Hello World!"
+    return render_template('index.html')
 
 
 @app.route("/<domain>")
