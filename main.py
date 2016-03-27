@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Check the mail configuration for a particular domain."""
 from flask import Flask, jsonify, render_template
 import checks
 app = Flask(__name__)
