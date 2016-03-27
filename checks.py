@@ -18,7 +18,6 @@ def check_spf(domain, mx):
     """Test the SPF records on a given domain."""
     results = {
         'test': 'spf',
-        'succeeded': False,
         'passed': None,
         'messages': []
     }
@@ -50,7 +49,6 @@ def check_dkim(domain, selector, folder):
     txt_domain = '%s._domainkey.%s' % (selector, domain)
     results = {
         'test': 'dkim',
-        'succeeded': True,
         'passed': False,
         'record': {txt_domain: correct_record},
         'messages': []
@@ -64,4 +62,26 @@ def check_dkim(domain, selector, folder):
                 results['messages'].append('Correct DKIM record found at %s' % txt_domain)
         else:
             results['messages'].append("%s found instead" % current_record)
+    return results
+
+
+def check_mx(domain, servers):
+    """Check that the proper MX records are in place for a given domain."""
+    results = {
+        'test': 'mx',
+        'passed': None,
+        'messages': []
+    }
+    actual_records = DNS.dnslookup(domain, 'MX')
+    records = []
+    for record in actual_records:
+        records.append(record[1])
+    for record in servers:
+        if record in records:
+            if results['passed'] is not False:
+                results['passed'] = True
+            results['messages'].append('MX record for %s found' % record)
+        else:
+            results['passed'] = False
+            results['messages'].append('Incorrect MX record %s found' % record)
     return results
