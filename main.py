@@ -37,4 +37,4 @@ def check(domain, check):
         return jsonify({"error": "unknown test"})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
