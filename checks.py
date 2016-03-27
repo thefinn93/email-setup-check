@@ -14,15 +14,14 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 
-def check_spf(domain, mx):
+def check_spf(domain, mx, record):
     """Test the SPF records on a given domain."""
     results = {
         'test': 'spf',
         'passed': None,
-        'records': [],
+        'records': [{'domain': domain, 'type': 'TXT', 'value': record}],
         'messages': []
     }
-
     try:
         for ip, helo in mx:
             spf_result, message = spf.check2(i=ip, s='admin@%s' % domain, h=helo)

@@ -31,7 +31,7 @@ def check(domain, check):
     if check == "mx":
         return jsonify(checks.check_mx(domain, app.config['MX']))
     elif check == "spf":
-        return jsonify(checks.check_spf(domain, app.config['SPF']))
+        return jsonify(checks.check_spf(domain, app.config['SPF'], app.config['SPF_RECORD']))
     elif check == "dkim":
         return jsonify(checks.check_dkim(domain, app.config['SELECTOR'], app.config['DKIM_FOLDER']))
     else:
