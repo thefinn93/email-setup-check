@@ -10,7 +10,7 @@ app.config['SELECTOR'] = 'q'
 app.config['DKIM_FOLDER'] = 'dkim'
 app.config.from_pyfile('config.py')
 
-CHECKS = ['mx', 'dkim', 'spf']
+CHECKS = ['mx', 'dkim', 'spf', "dmarc"]
 
 
 @app.route("/")
@@ -34,6 +34,8 @@ def check(domain, check):
         return jsonify(checks.check_spf(domain, app.config['SPF'], app.config['SPF_RECORD']))
     elif check == "dkim":
         return jsonify(checks.check_dkim(domain, app.config['SELECTOR'], app.config['DKIM_FOLDER']))
+    elif check == "dmarc":
+        return jsonify(checks.check_dmarc(domain, app.config['DMARC_RECORD']))
     else:
         return jsonify({"error": "unknown test"})
 

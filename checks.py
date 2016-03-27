@@ -92,3 +92,24 @@ def check_mx(domain, servers):
     if len(actual_records) == 0:
         results['messages'].append('No MX records found!')
     return results
+
+
+def check_dmarc(domain, dmarc_record):
+    """Check that the proper DMARC records are in place for a given domain."""
+    results = {
+        'test': 'dmarc',
+        'passed': None,
+        'records': [{'domain': '_dmarc.%s' % domain, 'type': 'TXT', 'value': dmarc_record}],
+        'messages': ['This test is kinda crappy and may yield false negatives.']
+    }
+    actual_records = DNS.dnslookup('_dmarc.%s' % domain, 'TXT')
+    for record in actual_records:
+        current_record = record[0].decode()
+        if current_record == dmarc_record and results['passed'] is not False:
+            results['passed'] = True
+        else:
+            results['passed'] = False
+    if len(actual_records) == 0:
+        results['messages'].append('No DMARC records found!')
+        results['passed'] = False
+    return results
