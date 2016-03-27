@@ -88,7 +88,6 @@ def check_mx(domain, servers):
             results['messages'].append('MX record for %s found' % record)
         else:
             results['passed'] = False
-            results['messages'].append('Incorrect MX record %s found' % record)
     if len(actual_records) == 0:
         results['messages'].append('No MX records found!')
     return results
