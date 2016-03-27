@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style type="text/css">
+    .code  {font-family: monospace}
+    </style>
     <title>You're bad at DNS</title>
 
     <!-- Bootstrap CSS -->
@@ -27,8 +30,6 @@
     <script src="{{ url_for('static', filename='vendor/bootstrap/dist/js/bootstrap.min.js') }}" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7"></script>
     <script type="text/javascript">
     $(".check").each(function() {
-      console.log(this);
-      console.log($(this).data('check'));
       $.get("/check/{{ domain }}/" + $(this).data('check'), function(result) {
         console.log(result);
         $(".label-" + result.test).removeClass('label-default').addClass(result.passed ? 'label-success' : 'label-danger').text(result.passed ? 'Passed' : 'Failed');
@@ -36,7 +37,23 @@
         result.messages.forEach(function(msg) {
           ul.append($("<li>").text(msg));
         });
-        $(".result-" + result.test).empty().append(ul);
+        var table = $("<table>");
+        if(result.records.length > 0) {
+          table.append($("<tr>")
+            .append($("<th>").text("domain"))
+            .append($("<th>").text("type"))
+            .append($("<th>").text("value"))
+          );
+          result.records.forEach(function(record) {
+            console.log(record);
+            table.addClass('table').append($("<tr>")
+              .append($("<td>").text(record.domain).addClass('code'))
+              .append($("<td>").text(record.type).addClass('code'))
+              .append($("<td>").text(record.value).addClass('code'))
+            );
+          });
+        }
+        $(".result-" + result.test).empty().append(ul).append(table);
       });
     })
     </script>

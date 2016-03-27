@@ -19,6 +19,7 @@ def check_spf(domain, mx):
     results = {
         'test': 'spf',
         'passed': None,
+        'records': [],
         'messages': []
     }
 
@@ -50,7 +51,7 @@ def check_dkim(domain, selector, folder):
     results = {
         'test': 'dkim',
         'passed': False,
-        'record': {txt_domain: correct_record},
+        'records': [{'domain': txt_domain, 'type': 'TXT', 'value': correct_record}],
         'messages': []
     }
     actual_records = DNS.dnslookup(txt_domain, 'TXT')
@@ -70,8 +71,11 @@ def check_mx(domain, servers):
     results = {
         'test': 'mx',
         'passed': None,
+        'records': [],
         'messages': []
     }
+    for server in servers:
+        results['records'].append({'domain': domain, 'type': 'MX', 'value': server})
     actual_records = DNS.dnslookup(domain, 'MX')
     records = []
     for record in actual_records:
