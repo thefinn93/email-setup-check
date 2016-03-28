@@ -53,7 +53,13 @@ def check_dkim(domain, selector, folder):
         'records': [{'domain': txt_domain, 'type': 'TXT', 'value': correct_record}],
         'messages': []
     }
-    actual_records = DNS.dnslookup(txt_domain, 'TXT')
+    try:
+        actual_records = DNS.dnslookup(txt_domain, 'TXT')
+        if len(actual_records) == 0:
+            results['messages'] = "This test probably is yeilding a false negative."
+    except DNS.Base.ServerError:
+        actual_records = []
+        results['messages'].append('No DKIM records found (for selector %s)' % selector)
     for record in actual_records:
         current_record = record[0].decode()
         if current_record == correct_record:
@@ -62,8 +68,6 @@ def check_dkim(domain, selector, folder):
                 results['messages'].append('Correct DKIM record found at %s' % txt_domain)
         else:
             results['messages'].append("%s found instead" % current_record)
-    if len(actual_records) == 0:
-        results['messages'].append('No DKIM records found (for selector %s)' % selector)
     return results
 
 
