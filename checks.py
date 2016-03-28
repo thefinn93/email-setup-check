@@ -56,7 +56,7 @@ def check_dkim(domain, selector, folder):
     try:
         actual_records = DNS.dnslookup(txt_domain, 'TXT')
         if len(actual_records) == 0:
-            results['messages'] = "This test probably is yeilding a false negative."
+            results['messages'].append("This test probably is yeilding a false negative.")
     except DNS.Base.ServerError:
         actual_records = []
         results['messages'].append('No DKIM records found (for selector %s)' % selector)
